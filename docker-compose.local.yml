@@ -4,7 +4,6 @@ services:
     container_name: nginx-proxy
     ports:
       - "80:80"
-      - "9003:9003"   # xdebug
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./.docker/nginx/client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro
@@ -21,6 +20,8 @@ services:
       context: ./.docker
       dockerfile: Dockerfile
     container_name: app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"    # Needed for Xdebug to connect back to IDE
     volumes:
       - ./.docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ./.docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
